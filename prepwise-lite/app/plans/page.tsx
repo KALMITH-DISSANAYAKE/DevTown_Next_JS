@@ -15,6 +15,10 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 async function getPlans(): Promise<StudyPlan[]> {
+  if (!supabase) {
+    // Supabase not configured yet — return empty array
+    return [];
+  }
   const { data, error } = await supabase
     .from('study_plans')
     .select('*')

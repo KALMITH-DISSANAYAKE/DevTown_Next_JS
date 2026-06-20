@@ -68,7 +68,17 @@ Make the plan realistic, actionable, and encouraging. Format it clearly with pro
 
     const generatedPlan = completion.choices[0]?.message?.content || '';
 
-    // Save to Supabase
+    // Save to Supabase (if configured)
+    if (!supabase) {
+      // Supabase not configured — return plan without saving
+      return NextResponse.json({
+        success: true,
+        plan: generatedPlan,
+        savedPlan: null,
+        warning: 'Supabase is not configured. Plan was not saved.',
+      });
+    }
+
     const { data, error } = await supabase
       .from('study_plans')
       .insert([
